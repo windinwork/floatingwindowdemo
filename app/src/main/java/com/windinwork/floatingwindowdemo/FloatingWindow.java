@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class FloatingWindow extends FrameLayout {
             float downX;
             float downY;
             boolean move;
+            int slop = ViewConfiguration.get(context).getScaledTouchSlop();
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -57,7 +59,9 @@ public class FloatingWindow extends FrameLayout {
                     float moveY = event.getRawY() - downY;
                     v.setTranslationX(translationX + moveX);
                     v.setTranslationY(translationY + moveY);
-                    move = true;
+                    if (moveX > slop && moveY > slop) {
+                        move = true;
+                    }
                 } else if (action == MotionEvent.ACTION_UP) {
                     translationX = v.getTranslationX();
                     translationY = v.getTranslationY();
